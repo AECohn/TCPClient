@@ -6,6 +6,9 @@
 
 #User_SimplSharp_Library "TCPCLient"
 
-Digital_Input Test;
+String_Input Address[65534], TX[65534], RX[65534];
+Analog_Input PortNumber;
+Digital_Input Connect, Disconnect;
 
 TcpConnection myConnection;
+

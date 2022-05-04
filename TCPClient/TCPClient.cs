@@ -15,7 +15,7 @@ namespace Simpl_Sharp_Pro_Template
         private TcpClient _tcpClient;
         private NetworkStream _tcpStream;
         private string _hostname;
-        private int _port;
+        private ushort _port;
         private Timer Message_Sender = new Timer();
         private Byte[] ResponseData = new Byte[65534];
         private Queue<Byte[]> writeQueue;
@@ -85,7 +85,7 @@ namespace Simpl_Sharp_Pro_Template
         }
 
 
-        public void Connect(string hostname, int port)
+        public void Connect(string hostname, ushort port)
         {
             try
             {

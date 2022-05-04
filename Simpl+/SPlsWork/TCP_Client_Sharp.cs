@@ -17,7 +17,12 @@ namespace UserModule_TCP_CLIENT_SHARP
     {
         static CCriticalSection g_criticalSection = new CCriticalSection();
         
-        Crestron.Logos.SplusObjects.DigitalInput TEST;
+        Crestron.Logos.SplusObjects.StringInput ADDRESS;
+        Crestron.Logos.SplusObjects.StringInput TX;
+        Crestron.Logos.SplusObjects.StringInput RX;
+        Crestron.Logos.SplusObjects.AnalogInput PORTNUMBER;
+        Crestron.Logos.SplusObjects.DigitalInput CONNECT;
+        Crestron.Logos.SplusObjects.DigitalInput DISCONNECT;
         Simpl_Sharp_Pro_Template.TcpConnection MYCONNECTION;
         
         public override void LogosSplusInitialize()
@@ -26,8 +31,23 @@ namespace UserModule_TCP_CLIENT_SHARP
             InitialParametersClass.ResolveHostName = __socketinfo__.ResolveHostName;
             _SplusNVRAM = new SplusNVRAM( this );
             
-            TEST = new Crestron.Logos.SplusObjects.DigitalInput( TEST__DigitalInput__, this );
-            m_DigitalInputList.Add( TEST__DigitalInput__, TEST );
+            CONNECT = new Crestron.Logos.SplusObjects.DigitalInput( CONNECT__DigitalInput__, this );
+            m_DigitalInputList.Add( CONNECT__DigitalInput__, CONNECT );
+            
+            DISCONNECT = new Crestron.Logos.SplusObjects.DigitalInput( DISCONNECT__DigitalInput__, this );
+            m_DigitalInputList.Add( DISCONNECT__DigitalInput__, DISCONNECT );
+            
+            PORTNUMBER = new Crestron.Logos.SplusObjects.AnalogInput( PORTNUMBER__AnalogSerialInput__, this );
+            m_AnalogInputList.Add( PORTNUMBER__AnalogSerialInput__, PORTNUMBER );
+            
+            ADDRESS = new Crestron.Logos.SplusObjects.StringInput( ADDRESS__AnalogSerialInput__, 65534, this );
+            m_StringInputList.Add( ADDRESS__AnalogSerialInput__, ADDRESS );
+            
+            TX = new Crestron.Logos.SplusObjects.StringInput( TX__AnalogSerialInput__, 65534, this );
+            m_StringInputList.Add( TX__AnalogSerialInput__, TX );
+            
+            RX = new Crestron.Logos.SplusObjects.StringInput( RX__AnalogSerialInput__, 65534, this );
+            m_StringInputList.Add( RX__AnalogSerialInput__, RX );
             
             
             
@@ -49,7 +69,12 @@ namespace UserModule_TCP_CLIENT_SHARP
         
         
         
-        const uint TEST__DigitalInput__ = 0;
+        const uint ADDRESS__AnalogSerialInput__ = 0;
+        const uint TX__AnalogSerialInput__ = 1;
+        const uint RX__AnalogSerialInput__ = 2;
+        const uint PORTNUMBER__AnalogSerialInput__ = 3;
+        const uint CONNECT__DigitalInput__ = 0;
+        const uint DISCONNECT__DigitalInput__ = 1;
         
         [SplusStructAttribute(-1, true, false)]
         public class SplusNVRAM : SplusStructureBase

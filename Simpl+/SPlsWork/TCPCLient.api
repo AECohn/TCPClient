@@ -78,6 +78,7 @@ namespace Simpl_Sharp_Pro_Template;
         // class functions
         FUNCTION Connect ( STRING hostname , SIGNED_LONG_INTEGER port );
         FUNCTION Write ( STRING message );
+        FUNCTION Disconnect ();
         SIGNED_LONG_INTEGER_FUNCTION GetHashCode ();
         STRING_FUNCTION ToString ();
 
