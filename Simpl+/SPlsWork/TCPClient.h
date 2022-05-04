@@ -1,8 +1,8 @@
 namespace TCPClient;
         // class declarations
-         class ResponseArgs;
+         class SendArgs;
          class TcpConnection;
-     class ResponseArgs 
+     class SendArgs 
     {
         // class delegates
 
@@ -23,7 +23,7 @@ namespace TCPClient;
         // class delegates
 
         // class events
-        EventHandler DataReceived ( TcpConnection sender, ResponseArgs e );
+        EventHandler DataReceived ( TcpConnection sender, SendArgs e );
 
         // class functions
         FUNCTION Connect ( STRING hostname , INTEGER port );

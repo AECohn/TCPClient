@@ -9,7 +9,7 @@ using Timer = System.Timers.Timer;
 
 namespace TCPClient
 {
-    public class ResponseArgs : EventArgs
+    public class SendArgs : EventArgs
     {
         public SimplSharpString Response;
     }
@@ -24,7 +24,7 @@ namespace TCPClient
         private Timer Message_Sender = new Timer();
         private Byte[] ResponseData = new Byte[65534];
         private Queue<Byte[]> writeQueue;
-        public event EventHandler<ResponseArgs> DataReceived;
+        public event EventHandler<SendArgs> DataReceived;
         private bool _queueMessages;
         public double QueueSpeed;
 
@@ -85,9 +85,6 @@ namespace TCPClient
                 _port = port;
                 _tcpClient.ConnectAsync(hostname, port).Wait(1000);
                 _tcpStream = _tcpClient.GetStream();
-
-
-                BeginRead();
             }
             catch
             {
@@ -135,12 +132,12 @@ namespace TCPClient
             try
             {
                 _numberOfBytesRead = _tcpStream.EndRead(readResult);
-                ResponseArgs sendArgs = new ResponseArgs
+                SendArgs responseArgs = new SendArgs()
                 {
                     Response = System.Text.Encoding.ASCII.GetString(ResponseData, 0, _numberOfBytesRead)
                 };
 
-                DataReceived?.Invoke(this, sendArgs);
+                DataReceived?.Invoke(this, responseArgs);
 
                 if (_numberOfBytesRead != 0)
                 {

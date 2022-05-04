@@ -32,7 +32,7 @@ Change TX
        myConnection.Write(TX);
 }
 
-eventhandler ReceivedData(TcpConnection sender, ResponseArgs args)
+eventhandler ReceivedData(TcpConnection sender, SendArgs args)
 {
   RX = args.Response; //consider sending the string through the event
 //Trace("RX = %s args.Response = %s", RX, args.Response); 

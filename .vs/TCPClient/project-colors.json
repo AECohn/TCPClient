@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "ProjectMap": {
+    "06f51d65-4aac-428c-bdc1-550827597197": {
+      "ProjectGuid": "06f51d65-4aac-428c-bdc1-550827597197",
+      "DisplayName": "TCPClient",
+      "ColorIndex": 0
+    }
+  },
+  "NextColorIndex": 1
+}

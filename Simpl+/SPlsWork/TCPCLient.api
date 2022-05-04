@@ -66,9 +66,9 @@ namespace Crestron.SimplSharp.Python;
     };
 }
 
-namespace Simpl_Sharp_Pro_Template;
+namespace TCPClient;
 {
-     class ResponseArgs 
+     class SendArgs 
     {
         // class delegates
 
@@ -89,7 +89,7 @@ namespace Simpl_Sharp_Pro_Template;
         // class delegates
 
         // class events
-        EventHandler DataReceived ( TcpConnection sender, ResponseArgs e );
+        EventHandler DataReceived ( TcpConnection sender, SendArgs e );
 
         // class functions
         FUNCTION Connect ( STRING hostname , INTEGER port );
@@ -102,7 +102,6 @@ namespace Simpl_Sharp_Pro_Template;
         INTEGER __class_id__;
 
         // class properties
-        STRING ResponseString[];
     };
 }
 
