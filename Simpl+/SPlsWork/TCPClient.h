@@ -1,4 +1,4 @@
-namespace Simpl_Sharp_Pro_Template;
+namespace TCPClient;
         // class declarations
          class ResponseArgs;
          class TcpConnection;
@@ -36,6 +36,5 @@ namespace Simpl_Sharp_Pro_Template;
         INTEGER __class_id__;
 
         // class properties
-        STRING ResponseString[];
     };
 

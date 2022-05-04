@@ -7,12 +7,13 @@ using System.Timers;
 using Crestron.SimplSharp;
 using Timer = System.Timers.Timer;
 
-namespace Simpl_Sharp_Pro_Template
+namespace TCPClient
 {
     public class ResponseArgs : EventArgs
     {
         public SimplSharpString Response;
     }
+
     public class TcpConnection
     {
         private int _numberOfBytesRead;
@@ -41,6 +42,7 @@ namespace Simpl_Sharp_Pro_Template
                 {
                     CrestronConsole.PrintLine(("Queue Speed must be greater than 0"));
                 }
+
                 _queueMessages = value;
                 Message_Sender.Enabled = _queueMessages;
             }
@@ -52,9 +54,7 @@ namespace Simpl_Sharp_Pro_Template
             writeQueue = new Queue<byte[]>();
             Message_Sender.Elapsed += Message_SenderOnElapsed;
             Message_Sender.AutoReset = true;
-
         }
-
 
 
         private void Message_SenderOnElapsed(object sender, ElapsedEventArgs e)
@@ -72,28 +72,6 @@ namespace Simpl_Sharp_Pro_Template
                     Disconnect();
                     Connect(_hostname, _port);
                 }
-            }
-        }
-
-
-        private string _responsestring;
-
-        public string ResponseString
-        {
-            get { return _responsestring; }
-            set
-            {
-                _responsestring = value;
-
-                ResponseArgs sendArgs = new ResponseArgs
-                {
-                    Response = _responsestring
-
-
-                };
-               
-                DataReceived(this, sendArgs);
-                CrestronConsole.PrintLine("At ResponseString setter" + _responsestring);
             }
         }
 
@@ -130,7 +108,6 @@ namespace Simpl_Sharp_Pro_Template
                 try
                 {
                     _tcpStream.Write(sendData, 0, sendData.Length);
-
                 }
                 catch
                 {
@@ -158,8 +135,12 @@ namespace Simpl_Sharp_Pro_Template
             try
             {
                 _numberOfBytesRead = _tcpStream.EndRead(readResult);
-                ResponseString = System.Text.Encoding.ASCII.GetString(ResponseData, 0, _numberOfBytesRead);
-                CrestronConsole.PrintLine("At EndReading:" + ResponseString);
+                ResponseArgs sendArgs = new ResponseArgs
+                {
+                    Response = System.Text.Encoding.ASCII.GetString(ResponseData, 0, _numberOfBytesRead)
+                };
+
+                DataReceived?.Invoke(this, sendArgs);
 
                 if (_numberOfBytesRead != 0)
                 {
