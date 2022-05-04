@@ -9,6 +9,10 @@ using Timer = System.Timers.Timer;
 
 namespace Simpl_Sharp_Pro_Template
 {
+    public class ResponseArgs : EventArgs
+    {
+        public SimplSharpString Response;
+    }
     public class TcpConnection
     {
         private int _numberOfBytesRead;
@@ -19,7 +23,7 @@ namespace Simpl_Sharp_Pro_Template
         private Timer Message_Sender = new Timer();
         private Byte[] ResponseData = new Byte[65534];
         private Queue<Byte[]> writeQueue;
-        public event EventHandler DataReceived;
+        public event EventHandler<ResponseArgs> DataReceived;
         private bool _queueMessages;
         public double QueueSpeed;
 
@@ -80,7 +84,16 @@ namespace Simpl_Sharp_Pro_Template
             set
             {
                 _responsestring = value;
-                DataReceived(this, EventArgs.Empty);
+
+                ResponseArgs sendArgs = new ResponseArgs
+                {
+                    Response = _responsestring
+
+
+                };
+               
+                DataReceived(this, sendArgs);
+                CrestronConsole.PrintLine("At ResponseString setter" + _responsestring);
             }
         }
 
@@ -146,6 +159,7 @@ namespace Simpl_Sharp_Pro_Template
             {
                 _numberOfBytesRead = _tcpStream.EndRead(readResult);
                 ResponseString = System.Text.Encoding.ASCII.GetString(ResponseData, 0, _numberOfBytesRead);
+                CrestronConsole.PrintLine("At EndReading:" + ResponseString);
 
                 if (_numberOfBytesRead != 0)
                 {

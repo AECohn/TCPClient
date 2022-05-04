@@ -6,9 +6,44 @@
 
 #User_SimplSharp_Library "TCPCLient"
 
-String_Input Address[65534], TX[65534], RX[65534];
+String_Input Address[65534], TX[65534];
+String_Output RX;
 Analog_Input PortNumber;
-Digital_Input Connect, Disconnect;
+Digital_Input Connect;
 
 TcpConnection myConnection;
+
+
+
+
+Push Connect
+{
+
+   myConnection.Connect(Address, PortNumber);
+}
+
+Release Connect
+{
+ myConnection.Disconnect();
+}
+
+Change TX
+{
+       myConnection.Write(TX);
+}
+
+eventhandler ReceivedData(TcpConnection sender, ResponseArgs args)
+{
+  RX = args.Response; //consider sending the string through the event
+//Trace("RX = %s args.Response = %s", RX, args.Response); 
+
+}
+
+function main()
+
+{
+ RegisterEvent(myConnection, DataReceived, ReceivedData);
+}
+
+
 
