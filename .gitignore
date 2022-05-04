@@ -134,3 +134,6 @@ _NCrunch*
 
 # Crestron Stuff
 *.clz
+
+# DLL files
+*.dll

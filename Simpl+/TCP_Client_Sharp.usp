@@ -3,3 +3,9 @@
 #DEFAULT_VOLATILE
 #ENABLE_STACK_CHECKING
 #ENABLE_TRACE
+
+#User_SimplSharp_Library "TCPCLient"
+
+Digital_Input Test;
+
+TcpConnection myConnection;
