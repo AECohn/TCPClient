@@ -159,7 +159,7 @@ namespace Simpl_Sharp_Pro_Template
         }
 
 
-        private void Disconnect()
+        public void Disconnect()
         {
             try
             {
