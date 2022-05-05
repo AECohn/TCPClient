@@ -35,6 +35,10 @@ Change TX
 
 Push EnableQueue
 {
+	if(QueueMilliseconds = "" || QueueMilliseconds = "0")
+    {
+		QueueMilliseconds = "1";
+	}
  myConnection.EnableQueue(QueueMilliseconds);
 }
 
