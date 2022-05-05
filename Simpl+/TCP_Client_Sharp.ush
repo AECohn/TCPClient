@@ -24,6 +24,8 @@
   SMWRev=2.02.05
   InputCue1=Connect
   InputSigType1=Digital
+  OutputCue1=Connected
+  OutputSigType1=Digital
   InputList2Cue1=Address
   InputList2SigType1=Serial
   InputList2Cue2=TX
@@ -37,8 +39,8 @@
   MaxVariableInputs=1
   MinVariableInputsList2=3
   MaxVariableInputsList2=3
-  MinVariableOutputs=0
-  MaxVariableOutputs=0
+  MinVariableOutputs=1
+  MaxVariableOutputs=1
   MinVariableOutputsList2=1
   MaxVariableOutputsList2=1
   MinVariableParams=0

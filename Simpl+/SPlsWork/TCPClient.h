@@ -13,7 +13,7 @@ namespace TCPClient;
         STRING_FUNCTION ToString ();
 
         // class variables
-        SIMPLSHARPSTRING Response[];
+        STRING Data[];
 
         // class properties
     };
@@ -24,6 +24,7 @@ namespace TCPClient;
 
         // class events
         EventHandler DataReceived ( TcpConnection sender, SendArgs e );
+        EventHandler ConnectionStatus ( TcpConnection sender, SendArgs e );
 
         // class functions
         FUNCTION Connect ( STRING hostname , INTEGER port );

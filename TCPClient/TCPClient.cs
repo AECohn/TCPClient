@@ -11,7 +11,7 @@ namespace TCPClient
 {
     public class SendArgs : EventArgs
     {
-        public SimplSharpString Response;
+        public string Data;
     }
 
     public class TcpConnection
@@ -24,9 +24,10 @@ namespace TCPClient
         private Timer Message_Sender = new Timer();
         private Byte[] ResponseData = new Byte[65534];
         private Queue<Byte[]> writeQueue;
-        public event EventHandler<SendArgs> DataReceived;
+        public event EventHandler<SendArgs> DataReceived, ConnectionStatus;
         private bool _queueMessages;
         public double QueueSpeed;
+        private SendArgs _responseArgs, _connectionArgs;
 
         public bool QueueMessages
         {
@@ -87,12 +88,17 @@ namespace TCPClient
                 _tcpStream = _tcpClient.GetStream();
                 BeginRead();
 
+                _connectionArgs = new SendArgs();
+                _connectionArgs.Data = "Connected";
             }
             catch
             {
                 CrestronConsole.PrintLine($"Exception in Connect");
                 Disconnect();
+                _connectionArgs = new SendArgs();
+                _connectionArgs.Data = "Could not Connect";
             }
+            ConnectionStatus?.Invoke(this, _connectionArgs );
         }
 
         public void Write(string message)
@@ -134,12 +140,12 @@ namespace TCPClient
             try
             {
                 _numberOfBytesRead = _tcpStream.EndRead(readResult);
-                SendArgs responseArgs = new SendArgs()
+                _responseArgs = new SendArgs()
                 {
-                    Response = System.Text.Encoding.ASCII.GetString(ResponseData, 0, _numberOfBytesRead)
+                    Data = System.Text.Encoding.ASCII.GetString(ResponseData, 0, _numberOfBytesRead)
                 };
 
-                DataReceived?.Invoke(this, responseArgs);
+                DataReceived?.Invoke(this, _responseArgs);
 
                 if (_numberOfBytesRead != 0)
                 {
