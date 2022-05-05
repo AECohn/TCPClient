@@ -25,28 +25,31 @@ namespace TCPClient
         private Byte[] ResponseData = new Byte[65534];
         private Queue<Byte[]> writeQueue;
         public event EventHandler<SendArgs> DataReceived, ConnectionStatus;
-        private bool _queueMessages;
-        public double QueueSpeed;
+        private double _queueSpeed;
         private SendArgs _responseArgs, _connectionArgs;
 
-        public bool QueueMessages
+       
+
+        public void EnableQueue(string queueRate)
         {
-            get { return _queueMessages; }
+            _queueSpeed = double.Parse((queueRate));
+            Message_Sender.Enabled = true;
 
-            set
+            if (_queueSpeed > 0)
             {
-                if (QueueSpeed > 0)
-                {
-                    Message_Sender.Interval = QueueSpeed;
-                }
-                else
-                {
-                    CrestronConsole.PrintLine(("Queue Speed must be greater than 0"));
-                }
-
-                _queueMessages = value;
-                Message_Sender.Enabled = _queueMessages;
+                Message_Sender.Interval = _queueSpeed;
             }
+            else
+            {
+                ErrorLog.Error("Queue Speed must be greater than 0");
+            }
+        }
+
+        public void DisableQueue()
+        {
+            _queueSpeed = 0;
+            Message_Sender.Enabled = false;
+
         }
 
 
@@ -76,8 +79,6 @@ namespace TCPClient
             }
         }
 
-       
-
 
         public void Connect(string hostname, ushort port)
         {
@@ -92,21 +93,19 @@ namespace TCPClient
 
                 _connectionArgs = new SendArgs();
                 _connectionArgs.Data = "Connected";
-                ConnectionStatus?.Invoke(this, _connectionArgs );
-
+                ConnectionStatus?.Invoke(this, _connectionArgs);
             }
             catch
             {
                 CrestronConsole.PrintLine($"Exception in Connect");
                 Disconnect();
-
             }
         }
 
         public void Write(string message)
         {
             Byte[] sendData = System.Text.Encoding.ASCII.GetBytes(message);
-            if (_queueMessages)
+            if (Message_Sender.Enabled)
             {
                 writeQueue.Enqueue(sendData);
             }
@@ -169,8 +168,7 @@ namespace TCPClient
                 _tcpClient.Close();
                 _connectionArgs = new SendArgs();
                 _connectionArgs.Data = "Could not Connect";
-                ConnectionStatus?.Invoke(this, _connectionArgs );
-
+                ConnectionStatus?.Invoke(this, _connectionArgs);
             }
             catch
             {
