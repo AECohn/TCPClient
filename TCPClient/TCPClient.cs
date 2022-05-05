@@ -68,7 +68,7 @@ namespace TCPClient
                 }
                 catch
                 {
-                    Console.WriteLine($"Exception in Write");
+                    CrestronConsole.PrintLine($"Exception in Write");
                     Disconnect();
                     Connect(_hostname, _port);
                 }
@@ -90,7 +90,7 @@ namespace TCPClient
             }
             catch
             {
-                Console.WriteLine($"Exception in Connect");
+                CrestronConsole.PrintLine($"Exception in Connect");
                 Disconnect();
             }
         }
@@ -110,7 +110,7 @@ namespace TCPClient
                 }
                 catch
                 {
-                    Console.WriteLine($"Exception in Write");
+                    CrestronConsole.PrintLine($"Exception in Write");
                     Disconnect();
                     Connect(_hostname, _port);
                 }
@@ -125,7 +125,7 @@ namespace TCPClient
             }
             catch (Exception e)
             {
-                Console.WriteLine($"{e} Exception at BeginRead");
+                CrestronConsole.PrintLine($"{e} Exception at BeginRead");
             }
         }
 
@@ -148,7 +148,7 @@ namespace TCPClient
             }
             catch
             {
-                Console.WriteLine($"Exception at EndRead");
+                CrestronConsole.PrintLine($"Exception at EndRead");
             }
         }
 
@@ -161,7 +161,7 @@ namespace TCPClient
             }
             catch
             {
-                Console.WriteLine("Error Disconnecting");
+                CrestronConsole.PrintLine("Error Disconnecting");
             }
         }
     }
