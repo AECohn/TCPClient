@@ -76,6 +76,8 @@ namespace TCPClient
             }
         }
 
+       
+
 
         public void Connect(string hostname, ushort port)
         {
@@ -90,15 +92,15 @@ namespace TCPClient
 
                 _connectionArgs = new SendArgs();
                 _connectionArgs.Data = "Connected";
+                ConnectionStatus?.Invoke(this, _connectionArgs );
+
             }
             catch
             {
                 CrestronConsole.PrintLine($"Exception in Connect");
                 Disconnect();
-                _connectionArgs = new SendArgs();
-                _connectionArgs.Data = "Could not Connect";
+
             }
-            ConnectionStatus?.Invoke(this, _connectionArgs );
         }
 
         public void Write(string message)
@@ -155,6 +157,7 @@ namespace TCPClient
             catch
             {
                 CrestronConsole.PrintLine($"Exception at EndRead");
+                Disconnect();
             }
         }
 
@@ -164,6 +167,10 @@ namespace TCPClient
             try
             {
                 _tcpClient.Close();
+                _connectionArgs = new SendArgs();
+                _connectionArgs.Data = "Could not Connect";
+                ConnectionStatus?.Invoke(this, _connectionArgs );
+
             }
             catch
             {
