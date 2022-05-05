@@ -36,7 +36,6 @@ EnType=0
 ZeroOnIoOk=0
 PIT=Main
 SGMethod=1
-ServerURL=http://172.22.52.118/VirtualControl/config/settings
 ]
 [
 ObjTp=Dv
