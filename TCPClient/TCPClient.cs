@@ -85,6 +85,8 @@ namespace TCPClient
                 _port = port;
                 _tcpClient.ConnectAsync(hostname, port).Wait(1000);
                 _tcpStream = _tcpClient.GetStream();
+                BeginRead();
+
             }
             catch
             {
