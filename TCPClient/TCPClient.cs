@@ -1,11 +1,8 @@
 ﻿//From Aviv's Simpl#Pro template
 
 using System;
-using System.Collections.Generic;
 using System.Net.Sockets;
-using System.Timers;
 using Crestron.SimplSharp;
-using Timer = System.Timers.Timer;
 
 namespace TCPClient
 {
@@ -20,64 +17,14 @@ namespace TCPClient
         private TcpClient _tcpClient;
         private NetworkStream _tcpStream;
         private string _hostname;
+
         private ushort _port;
-        private Timer Message_Sender = new Timer();
+
         private Byte[] ResponseData = new Byte[65534];
-        private Queue<Byte[]> writeQueue;
+
         public event EventHandler<SendArgs> DataReceived, ConnectionStatus;
-        private double _queueSpeed;
+
         private SendArgs _responseArgs, _connectionArgs;
-
-       
-
-        public void EnableQueue(string queueRate)
-        {
-            _queueSpeed = double.Parse((queueRate));
-            Message_Sender.Enabled = true;
-
-            if (_queueSpeed > 0)
-            {
-                Message_Sender.Interval = _queueSpeed;
-            }
-            else
-            {
-                ErrorLog.Error("Queue Speed must be greater than 0");
-            }
-        }
-
-        public void DisableQueue()
-        {
-            _queueSpeed = 0;
-            Message_Sender.Enabled = false;
-
-        }
-
-
-        public TcpConnection()
-        {
-            writeQueue = new Queue<byte[]>();
-            Message_Sender.Elapsed += Message_SenderOnElapsed;
-            Message_Sender.AutoReset = true;
-        }
-
-
-        private void Message_SenderOnElapsed(object sender, ElapsedEventArgs e)
-        {
-            if (writeQueue.Count > 0)
-            {
-                try
-                {
-                    byte[] send = writeQueue.Dequeue();
-                    _tcpStream.Write(send, 0, send.Length);
-                }
-                catch
-                {
-                    CrestronConsole.PrintLine($"Exception in Write");
-                    Disconnect();
-                    Connect(_hostname, _port);
-                }
-            }
-        }
 
 
         public void Connect(string hostname, ushort port)
@@ -105,22 +52,16 @@ namespace TCPClient
         public void Write(string message)
         {
             Byte[] sendData = System.Text.Encoding.ASCII.GetBytes(message);
-            if (Message_Sender.Enabled)
+
+            try
             {
-                writeQueue.Enqueue(sendData);
+                _tcpStream.Write(sendData, 0, sendData.Length);
             }
-            else
+            catch
             {
-                try
-                {
-                    _tcpStream.Write(sendData, 0, sendData.Length);
-                }
-                catch
-                {
-                    CrestronConsole.PrintLine($"Exception in Write");
-                    Disconnect();
-                    Connect(_hostname, _port);
-                }
+                CrestronConsole.PrintLine($"Exception in Write");
+                Disconnect();
+                Connect(_hostname, _port);
             }
         }
 
@@ -133,6 +74,7 @@ namespace TCPClient
             catch (Exception e)
             {
                 CrestronConsole.PrintLine($"{e} Exception at BeginRead");
+                Disconnect();
             }
         }
 
