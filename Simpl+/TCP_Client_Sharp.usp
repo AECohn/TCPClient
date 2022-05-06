@@ -6,10 +6,10 @@
 
 #User_SimplSharp_Library "TCPCLient"
 
-String_Input Address[65534], TX[65534], QueueMilliseconds[65534];
+String_Input Address[65534], TX[65534];
 String_Output RX;
 Analog_Input PortNumber;
-Digital_Input Connect, EnableQueue;
+Digital_Input Connect;
 Digital_Output Connected;
 
 TcpConnection myConnection;
@@ -33,25 +33,11 @@ Change TX
        myConnection.Write(TX);
 }
 
-Push EnableQueue
-{
-	if(QueueMilliseconds = "" || QueueMilliseconds = "0")
-    {
-		QueueMilliseconds = "1";
-	}
- myConnection.EnableQueue(QueueMilliseconds);
-}
-
-Release EnableQueue
-{
- myConnection.DisableQueue();
-}
 
 
 eventhandler ReceivedData(TcpConnection sender, SendArgs args)
 {
   RX = args.Data; //consider sending the string through the event
-//Trace("RX = %s args.Response = %s", RX, args.Response); 
 
 }
 
