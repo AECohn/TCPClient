@@ -19,11 +19,9 @@ namespace UserModule_TCP_CLIENT_SHARP
         
         Crestron.Logos.SplusObjects.StringInput ADDRESS;
         Crestron.Logos.SplusObjects.StringInput TX;
-        Crestron.Logos.SplusObjects.StringInput QUEUEMILLISECONDS;
         Crestron.Logos.SplusObjects.StringOutput RX;
         Crestron.Logos.SplusObjects.AnalogInput PORTNUMBER;
         Crestron.Logos.SplusObjects.DigitalInput CONNECT;
-        Crestron.Logos.SplusObjects.DigitalInput ENABLEQUEUE;
         Crestron.Logos.SplusObjects.DigitalOutput CONNECTED;
         TCPClient.TcpConnection MYCONNECTION;
         object CONNECT_OnPush_0 ( Object __EventInfo__ )
@@ -34,7 +32,7 @@ namespace UserModule_TCP_CLIENT_SHARP
             {
                 SplusExecutionContext __context__ = SplusThreadStartCode(__SignalEventArg__);
                 
-                __context__.SourceCodeLine = 23;
+                __context__.SourceCodeLine = 19;
                 MYCONNECTION . Connect ( ADDRESS .ToString(), (ushort)( PORTNUMBER  .UshortValue )) ; 
                 
                 
@@ -53,7 +51,7 @@ namespace UserModule_TCP_CLIENT_SHARP
         {
             SplusExecutionContext __context__ = SplusThreadStartCode(__SignalEventArg__);
             
-            __context__.SourceCodeLine = 28;
+            __context__.SourceCodeLine = 24;
             MYCONNECTION . Disconnect ( ) ; 
             
             
@@ -72,53 +70,8 @@ object TX_OnChange_2 ( Object __EventInfo__ )
     {
         SplusExecutionContext __context__ = SplusThreadStartCode(__SignalEventArg__);
         
-        __context__.SourceCodeLine = 33;
+        __context__.SourceCodeLine = 29;
         MYCONNECTION . Write ( TX .ToString()) ; 
-        
-        
-    }
-    catch(Exception e) { ObjectCatchHandler(e); }
-    finally { ObjectFinallyHandler( __SignalEventArg__ ); }
-    return this;
-    
-}
-
-object ENABLEQUEUE_OnPush_3 ( Object __EventInfo__ )
-
-    { 
-    Crestron.Logos.SplusObjects.SignalEventArgs __SignalEventArg__ = (Crestron.Logos.SplusObjects.SignalEventArgs)__EventInfo__;
-    try
-    {
-        SplusExecutionContext __context__ = SplusThreadStartCode(__SignalEventArg__);
-        
-        __context__.SourceCodeLine = 38;
-        if ( Functions.TestForTrue  ( ( Functions.BoolToInt ( (Functions.TestForTrue ( Functions.BoolToInt (QUEUEMILLISECONDS == "") ) || Functions.TestForTrue ( Functions.BoolToInt (QUEUEMILLISECONDS == "0") )) ))  ) ) 
-            { 
-            __context__.SourceCodeLine = 40;
-            QUEUEMILLISECONDS  .UpdateValue ( "1"  ) ; 
-            } 
-        
-        __context__.SourceCodeLine = 42;
-        MYCONNECTION . EnableQueue ( QUEUEMILLISECONDS .ToString()) ; 
-        
-        
-    }
-    catch(Exception e) { ObjectCatchHandler(e); }
-    finally { ObjectFinallyHandler( __SignalEventArg__ ); }
-    return this;
-    
-}
-
-object ENABLEQUEUE_OnRelease_4 ( Object __EventInfo__ )
-
-    { 
-    Crestron.Logos.SplusObjects.SignalEventArgs __SignalEventArg__ = (Crestron.Logos.SplusObjects.SignalEventArgs)__EventInfo__;
-    try
-    {
-        SplusExecutionContext __context__ = SplusThreadStartCode(__SignalEventArg__);
-        
-        __context__.SourceCodeLine = 47;
-        MYCONNECTION . DisableQueue ( ) ; 
         
         
     }
@@ -135,7 +88,7 @@ public void RECEIVEDDATA ( object __sender__ /*TCPClient.TcpConnection SENDER */
     {
         SplusExecutionContext __context__ = SplusSimplSharpDelegateThreadStartCode();
         
-        __context__.SourceCodeLine = 53;
+        __context__.SourceCodeLine = 34;
         RX  .UpdateValue ( ARGS . Data  ) ; 
         
         
@@ -150,19 +103,19 @@ public void CONNECTIONFEEDBACK ( object __sender__ /*TCPClient.TcpConnection SEN
     {
         SplusExecutionContext __context__ = SplusSimplSharpDelegateThreadStartCode();
         
-        __context__.SourceCodeLine = 60;
+        __context__.SourceCodeLine = 39;
         if ( Functions.TestForTrue  ( ( Functions.BoolToInt (ARGS.Data == "Connected"))  ) ) 
             { 
-            __context__.SourceCodeLine = 62;
+            __context__.SourceCodeLine = 41;
             CONNECTED  .Value = (ushort) ( 1 ) ; 
             } 
         
         else 
             {
-            __context__.SourceCodeLine = 64;
+            __context__.SourceCodeLine = 43;
             if ( Functions.TestForTrue  ( ( Functions.BoolToInt (ARGS.Data == "Could not Connect"))  ) ) 
                 { 
-                __context__.SourceCodeLine = 66;
+                __context__.SourceCodeLine = 45;
                 CONNECTED  .Value = (ushort) ( 0 ) ; 
                 } 
             
@@ -180,11 +133,11 @@ public override object FunctionMain (  object __obj__ )
     {
         SplusExecutionContext __context__ = SplusFunctionMainStartCode();
         
-        __context__.SourceCodeLine = 74;
+        __context__.SourceCodeLine = 51;
         // RegisterEvent( MYCONNECTION , DATARECEIVED , RECEIVEDDATA ) 
         try { g_criticalSection.Enter(); MYCONNECTION .DataReceived  += RECEIVEDDATA; } finally { g_criticalSection.Leave(); }
         ; 
-        __context__.SourceCodeLine = 75;
+        __context__.SourceCodeLine = 52;
         // RegisterEvent( MYCONNECTION , CONNECTIONSTATUS , CONNECTIONFEEDBACK ) 
         try { g_criticalSection.Enter(); MYCONNECTION .ConnectionStatus  += CONNECTIONFEEDBACK; } finally { g_criticalSection.Leave(); }
         ; 
@@ -206,9 +159,6 @@ public override void LogosSplusInitialize()
     CONNECT = new Crestron.Logos.SplusObjects.DigitalInput( CONNECT__DigitalInput__, this );
     m_DigitalInputList.Add( CONNECT__DigitalInput__, CONNECT );
     
-    ENABLEQUEUE = new Crestron.Logos.SplusObjects.DigitalInput( ENABLEQUEUE__DigitalInput__, this );
-    m_DigitalInputList.Add( ENABLEQUEUE__DigitalInput__, ENABLEQUEUE );
-    
     CONNECTED = new Crestron.Logos.SplusObjects.DigitalOutput( CONNECTED__DigitalOutput__, this );
     m_DigitalOutputList.Add( CONNECTED__DigitalOutput__, CONNECTED );
     
@@ -221,9 +171,6 @@ public override void LogosSplusInitialize()
     TX = new Crestron.Logos.SplusObjects.StringInput( TX__AnalogSerialInput__, 65534, this );
     m_StringInputList.Add( TX__AnalogSerialInput__, TX );
     
-    QUEUEMILLISECONDS = new Crestron.Logos.SplusObjects.StringInput( QUEUEMILLISECONDS__AnalogSerialInput__, 65534, this );
-    m_StringInputList.Add( QUEUEMILLISECONDS__AnalogSerialInput__, QUEUEMILLISECONDS );
-    
     RX = new Crestron.Logos.SplusObjects.StringOutput( RX__AnalogSerialOutput__, this );
     m_StringOutputList.Add( RX__AnalogSerialOutput__, RX );
     
@@ -231,8 +178,6 @@ public override void LogosSplusInitialize()
     CONNECT.OnDigitalPush.Add( new InputChangeHandlerWrapper( CONNECT_OnPush_0, false ) );
     CONNECT.OnDigitalRelease.Add( new InputChangeHandlerWrapper( CONNECT_OnRelease_1, false ) );
     TX.OnSerialChange.Add( new InputChangeHandlerWrapper( TX_OnChange_2, false ) );
-    ENABLEQUEUE.OnDigitalPush.Add( new InputChangeHandlerWrapper( ENABLEQUEUE_OnPush_3, false ) );
-    ENABLEQUEUE.OnDigitalRelease.Add( new InputChangeHandlerWrapper( ENABLEQUEUE_OnRelease_4, false ) );
     
     _SplusNVRAM.PopulateCustomAttributeList( true );
     
@@ -254,11 +199,9 @@ public UserModuleClass_TCP_CLIENT_SHARP ( string InstanceName, string ReferenceI
 
 const uint ADDRESS__AnalogSerialInput__ = 0;
 const uint TX__AnalogSerialInput__ = 1;
-const uint QUEUEMILLISECONDS__AnalogSerialInput__ = 2;
 const uint RX__AnalogSerialOutput__ = 0;
-const uint PORTNUMBER__AnalogSerialInput__ = 3;
+const uint PORTNUMBER__AnalogSerialInput__ = 2;
 const uint CONNECT__DigitalInput__ = 0;
-const uint ENABLEQUEUE__DigitalInput__ = 1;
 const uint CONNECTED__DigitalOutput__ = 0;
 
 [SplusStructAttribute(-1, true, false)]

@@ -27,8 +27,6 @@ namespace TCPClient;
         EventHandler ConnectionStatus ( TcpConnection sender, SendArgs e );
 
         // class functions
-        FUNCTION EnableQueue ( STRING queueRate );
-        FUNCTION DisableQueue ();
         FUNCTION Connect ( STRING hostname , INTEGER port );
         FUNCTION Write ( STRING message );
         FUNCTION Disconnect ();
