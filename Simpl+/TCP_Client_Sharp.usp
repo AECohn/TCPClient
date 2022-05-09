@@ -1,4 +1,4 @@
-//Programmer: Aviv Cohn
+//Programmer: Aviv Cohn DGI
 
 #DEFAULT_VOLATILE
 #ENABLE_STACK_CHECKING
@@ -14,53 +14,40 @@ Digital_Output Connected;
 
 TcpConnection myConnection;
 
-
-
-
 Push Connect
 {
-
-   myConnection.Connect(Address, PortNumber);
+    myConnection.Connect(Address, PortNumber);
 }
 
 Release Connect
 {
- myConnection.Disconnect();
+ 	myConnection.Disconnect();
 }
 
 Change TX
 {
-       myConnection.Write(TX);
+    myConnection.Write(TX);
 }
-
-
 
 eventhandler ReceivedData(TcpConnection sender, SendArgs args)
 {
-  RX = args.Data; //consider sending the string through the event
-
+  	RX = args.Data;
 }
 
 eventhandler ConnectionFeedback(TcpConnection sender, SendArgs args)
 {
-	if(args.Data =  "Connected")
+	if(args.Data = "Connected")
 	{
      Connected = 1;
 	}
 	else if(args.Data = "Could not Connect")
-		{
-         Connected = 0;
-		}
+	{
+        Connected = 0;
+	}
 }
-
 
 function main()
-
 {
- RegisterEvent(myConnection, DataReceived, ReceivedData);
-RegisterEvent(myConnection, ConnectionStatus, ConnectionFeedback);
-
+ 	RegisterEvent(myConnection, DataReceived, ReceivedData);
+	RegisterEvent(myConnection, ConnectionStatus, ConnectionFeedback);
 }
-
-
-
