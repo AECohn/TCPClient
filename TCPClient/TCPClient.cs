@@ -1,7 +1,5 @@
-﻿
-using System;
+﻿using System;
 using System.Net.Sockets;
-using Crestron.SimplSharp;
 
 namespace TCPClient
 {
@@ -26,11 +24,11 @@ namespace TCPClient
 
         private ushort _port;
 
-        private Byte[] ResponseData = new Byte[65534];
+        private Byte[] _responseData = new Byte[65534];
 
-        public event EventHandler<SendArgs> DataReceived, ConnectionStatus;
+        public event EventHandler<SendArgs> DataReceived, ConnectionStatus, Error;
 
-        private SendArgs _responseArgs, _connectionArgs;
+        private SendArgs _responseArgs, _connectionArgs, _errorArgs;
 
         /// <summary>
         /// Connects to the remote device via hostname and port fields
@@ -48,13 +46,20 @@ namespace TCPClient
                 _tcpStream = _tcpClient.GetStream();
                 BeginRead();
 
-                _connectionArgs = new SendArgs();
-                _connectionArgs.Data = "Connected";
+                _connectionArgs = new SendArgs()
+                {
+                    Data = "Connected"
+                };
+
                 ConnectionStatus?.Invoke(this, _connectionArgs);
             }
             catch
             {
-                CrestronConsole.PrintLine($"Exception in Connect");
+                _errorArgs = new SendArgs()
+                {
+                    Data = "Exception in Connect"
+                };
+                Error?.Invoke(this, _errorArgs);
                 Disconnect();
             }
         }
@@ -73,7 +78,11 @@ namespace TCPClient
             }
             catch
             {
-                CrestronConsole.PrintLine($"Exception in Write");
+                _errorArgs = new SendArgs()
+                {
+                    Data = "Exception in Write"
+                };
+                Error?.Invoke(this, _errorArgs);
                 Disconnect();
                 Connect(_hostname, _port);
             }
@@ -84,11 +93,15 @@ namespace TCPClient
         {
             try
             {
-                _tcpStream.BeginRead(ResponseData, 0, ResponseData.Length, EndReading, _tcpStream);
+                _tcpStream.BeginRead(_responseData, 0, _responseData.Length, EndReading, _tcpStream);
             }
-            catch (Exception e)
+            catch
             {
-                CrestronConsole.PrintLine($"{e} Exception at BeginRead");
+                _errorArgs = new SendArgs()
+                {
+                    Data = "Exception in BeginRead"
+                };
+                Error?.Invoke(this, _errorArgs);
                 Disconnect();
             }
         }
@@ -100,7 +113,7 @@ namespace TCPClient
                 _numberOfBytesRead = _tcpStream.EndRead(readResult);
                 _responseArgs = new SendArgs()
                 {
-                    Data = System.Text.Encoding.ASCII.GetString(ResponseData, 0, _numberOfBytesRead)
+                    Data = System.Text.Encoding.ASCII.GetString(_responseData, 0, _numberOfBytesRead)
                 };
 
                 DataReceived?.Invoke(this, _responseArgs);
@@ -112,7 +125,11 @@ namespace TCPClient
             }
             catch
             {
-                CrestronConsole.PrintLine($"Exception at EndRead");
+                _errorArgs = new SendArgs()
+                {
+                    Data = "Exception in EndRead"
+                };
+                Error?.Invoke(this, _errorArgs);
                 Disconnect();
             }
         }
@@ -125,13 +142,20 @@ namespace TCPClient
             try
             {
                 _tcpClient.Close();
-                _connectionArgs = new SendArgs();
-                _connectionArgs.Data = "Could not Connect";
+                _connectionArgs = new SendArgs()
+                {
+                    Data = "Could not Connect"
+                };
+
                 ConnectionStatus?.Invoke(this, _connectionArgs);
             }
             catch
             {
-                CrestronConsole.PrintLine("Error Disconnecting");
+                _errorArgs = new SendArgs()
+                {
+                    Data = "Error Disconnecting"
+                };
+                Error?.Invoke(this, _errorArgs);
             }
         }
     }
