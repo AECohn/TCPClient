@@ -162,7 +162,7 @@ namespace TCPClient
                 _numberOfBytesRead = _tcpStream.EndRead(readResult);
                 _responseArgs = new SendArgs()
                 {
-                    Data = System.Text.Encoding.ASCII.GetString(_responseData, 0, _numberOfBytesRead)
+                    Data = System.Text.Encoding.GetEncoding("iso-8859-1").GetString(_responseData, 0, _numberOfBytesRead)
                 };
 
                 DataReceived?.Invoke(this, _responseArgs);
