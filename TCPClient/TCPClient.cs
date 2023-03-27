@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net.Sockets;
+using System.Timers;
 
 namespace TCPClient
 {
@@ -21,6 +22,7 @@ namespace TCPClient
         private TcpClient _tcpClient;
         private NetworkStream _tcpStream;
         private string _hostname;
+        private Timer _timer;
 
         private ushort _port;
 
@@ -29,6 +31,53 @@ namespace TCPClient
         public event EventHandler<SendArgs> DataReceived, ConnectionStatus, Error;
 
         private SendArgs _responseArgs, _connectionArgs, _errorArgs;
+        
+        public void ConnectionPollStart(int milliseconds)
+        {
+            _timer = new Timer();
+            _timer.Interval = milliseconds;
+            _timer.Elapsed += Timer_Elapsed;
+            _timer.Start();
+        }
+        
+        public void ConnectionPollStop()
+        {
+            _timer.Stop();
+        }
+
+        private void Timer_Elapsed(object sender, ElapsedEventArgs e)
+        {
+            if (!IsConnected())
+            {
+                Disconnect();
+                Connect(_hostname, _port);
+            }
+        }
+        
+        public bool IsConnected()
+        {
+            try
+            {
+                if (_tcpClient != null && _tcpClient.Client != null && _tcpClient.Client.Connected)
+                {
+                    if (_tcpClient.Client.Poll(0, SelectMode.SelectRead))
+                    {
+                        return !(_tcpClient.Client.Receive(new byte[1], SocketFlags.Peek) == 0);
+                    }
+
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            catch
+            {
+                return false;
+            }
+        }
+        
 
         /// <summary>
         /// Connects to the remote device via hostname and port fields
