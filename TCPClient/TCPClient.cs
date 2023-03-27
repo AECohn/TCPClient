@@ -191,6 +191,11 @@ namespace TCPClient
             try
             {
                 _tcpClient.Close();
+                _tcpStream.Close();
+                _tcpClient.Dispose();
+                _tcpStream.Dispose();
+                _hostname = "";
+                _port = 0;
                 _connectionArgs = new SendArgs()
                 {
                     Data = "Could not Connect"
