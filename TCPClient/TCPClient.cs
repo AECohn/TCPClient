@@ -88,6 +88,11 @@ namespace TCPClient
         {
             try
             {
+                if (_tcpClient != null)
+                {
+                    Disconnect();
+                }
+
                 _tcpClient = new TcpClient();
                 _hostname = hostname;
                 _port = port;
@@ -194,8 +199,7 @@ namespace TCPClient
                 _tcpStream.Close();
                 _tcpClient.Dispose();
                 _tcpStream.Dispose();
-                _hostname = "";
-                _port = 0;
+                
                 _connectionArgs = new SendArgs()
                 {
                     Data = "Could not Connect"
