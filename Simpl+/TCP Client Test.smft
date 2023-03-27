@@ -1,5 +1,0 @@
-<Device Model="4-Series Ethernet Control System" Name="Ethernet-Only 4-series">
-   <Network Type="Ethernet" Id="01">
-      <Device Model="CEN-IO-COM-102" DeviceId="04"/>
-   </Network>
-</Device>

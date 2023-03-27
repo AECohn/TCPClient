@@ -11,6 +11,7 @@ String_Output RX;
 Analog_Input PortNumber;
 Digital_Input Connect;
 Digital_Output Connected;
+String_Output Status;
 
 TcpConnection myConnection;
 
@@ -44,10 +45,18 @@ eventhandler ConnectionFeedback(TcpConnection sender, SendArgs args)
 	{
         Connected = 0;
 	}
+	Status = args.Data;
 }
+
+eventhandler ErrorStatus(TcpConnection sender, SendArgs args)
+{
+		Status = args.Data;
+}
+
 
 function main()
 {
  	RegisterEvent(myConnection, DataReceived, ReceivedData);
 	RegisterEvent(myConnection, ConnectionStatus, ConnectionFeedback);
-}
+	RegisterEvent(myConnection, Error, ErrorStatus);
+}	

@@ -34,6 +34,8 @@
   InputList2SigType3=Analog
   OutputList2Cue1=RX
   OutputList2SigType1=Serial
+  OutputList2Cue2=Status
+  OutputList2SigType2=Serial
   ParamCue1=[Reference Name]
   MinVariableInputs=1
   MaxVariableInputs=1
@@ -41,8 +43,8 @@
   MaxVariableInputsList2=3
   MinVariableOutputs=1
   MaxVariableOutputs=1
-  MinVariableOutputsList2=1
-  MaxVariableOutputsList2=1
+  MinVariableOutputsList2=2
+  MaxVariableOutputsList2=2
   MinVariableParams=0
   MaxVariableParams=0
   Expand=expand_separately
