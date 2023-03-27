@@ -1,5 +1,4 @@
-﻿//From Aviv's Simpl#Pro template
-
+﻿
 using System;
 using System.Net.Sockets;
 using Crestron.SimplSharp;
@@ -66,7 +65,7 @@ namespace TCPClient
         /// <param name="message"></param>
         public void Write(string message)
         {
-            Byte[] sendData = System.Text.Encoding.ASCII.GetBytes(message);
+            Byte[] sendData = System.Text.Encoding.GetEncoding("iso-8859-1").GetBytes(message);
 
             try
             {
