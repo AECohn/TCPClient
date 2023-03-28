@@ -49,8 +49,8 @@ namespace TCPClient
         {
             if (!IsConnected())
             {
-                Disconnect();
-                Connect(_hostname, _port);
+                _disconnect();
+                _connect();
             }
         }
         
@@ -77,8 +77,6 @@ namespace TCPClient
                 return false;
             }
         }
-        
-
         /// <summary>
         /// Connects to the remote device via hostname and port fields
         /// </summary>
@@ -86,17 +84,24 @@ namespace TCPClient
         /// <param name="port"></param>
         public void Connect(string hostname, ushort port)
         {
+            _hostname = hostname;
+            _port = port;
+            _connect();
+          
+        }
+        
+        
+        private void _connect()
+        {
             try
             {
                 if (_tcpClient != null)
                 {
-                    Disconnect();
+                    _disconnect();
                 }
 
                 _tcpClient = new TcpClient();
-                _hostname = hostname;
-                _port = port;
-                _tcpClient.ConnectAsync(hostname, port).Wait(1000);
+                _tcpClient.ConnectAsync(_hostname, _port).Wait(1000);
                 _tcpStream = _tcpClient.GetStream();
                 BeginRead();
 
@@ -114,7 +119,7 @@ namespace TCPClient
                     Data = "Exception in Connect"
                 };
                 Error?.Invoke(this, _errorArgs);
-                Disconnect();
+                _disconnect();
             }
         }
 
@@ -137,8 +142,8 @@ namespace TCPClient
                     Data = "Exception in Write"
                 };
                 Error?.Invoke(this, _errorArgs);
-                Disconnect();
-                Connect(_hostname, _port);
+                _disconnect();
+                _connect();
             }
         }
 
@@ -156,7 +161,7 @@ namespace TCPClient
                     Data = "Exception in BeginRead"
                 };
                 Error?.Invoke(this, _errorArgs);
-                Disconnect();
+                _disconnect();
             }
         }
 
@@ -184,14 +189,20 @@ namespace TCPClient
                     Data = "Exception in EndRead"
                 };
                 Error?.Invoke(this, _errorArgs);
-                Disconnect();
+                _disconnect();
             }
         }
 
+        public void Disconnect()
+        {
+            _hostname = null;
+            _port = 0;
+            _disconnect();
+        }
         /// <summary>
         /// Disconnects from the remote device
         /// </summary>
-        public void Disconnect()
+        private void _disconnect()
         {
             try
             {
