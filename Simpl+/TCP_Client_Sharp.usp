@@ -10,7 +10,7 @@
 String_Input Address[65534], TX[65534];
 String_Output RX;
 Analog_Input PortNumber;
-Digital_Input Connect;
+Digital_Input Connect, Poll;
 Digital_Output Connected;
 String_Output Status;
 
@@ -24,6 +24,17 @@ Push Connect
 Release Connect
 {
  	myConnection.Disconnect();
+}
+
+Push Poll
+{
+ myConnection.ConnectionPollStart(1000);
+
+}
+
+Release Poll
+{
+ myConnection.ConnectionPollStop();
 }
 
 Change TX

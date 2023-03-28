@@ -24,6 +24,8 @@
   SMWRev=2.02.05
   InputCue1=Connect
   InputSigType1=Digital
+  InputCue2=Poll
+  InputSigType2=Digital
   OutputCue1=Connected
   OutputSigType1=Digital
   InputList2Cue1=Address
@@ -37,8 +39,8 @@
   OutputList2Cue2=Status
   OutputList2SigType2=Serial
   ParamCue1=[Reference Name]
-  MinVariableInputs=1
-  MaxVariableInputs=1
+  MinVariableInputs=2
+  MaxVariableInputs=2
   MinVariableInputsList2=3
   MaxVariableInputsList2=3
   MinVariableOutputs=1
