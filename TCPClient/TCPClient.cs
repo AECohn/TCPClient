@@ -129,7 +129,7 @@ namespace TCPClient
         /// <param name="message"></param>
         public void Write(string message)
         {
-            Byte[] sendData = System.Text.Encoding.GetEncoding("iso-8859-1").GetBytes(message);
+            Byte[] sendData = System.Text.Encoding.UTF8.GetBytes(message);
 
             try
             {
@@ -172,7 +172,7 @@ namespace TCPClient
                 _numberOfBytesRead = _tcpStream.EndRead(readResult);
                 _responseArgs = new SendArgs()
                 {
-                    Data = System.Text.Encoding.GetEncoding("iso-8859-1").GetString(_responseData, 0, _numberOfBytesRead)
+                    Data = System.Text.Encoding.UTF8.GetString(_responseData, 0, _numberOfBytesRead)
                 };
 
                 DataReceived?.Invoke(this, _responseArgs);
