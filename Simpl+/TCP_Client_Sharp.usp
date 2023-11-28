@@ -53,7 +53,7 @@ eventhandler ConnectionFeedback(TcpConnection sender, SendArgs args)
 	{
      Connected = 1;
 	}
-	else if(args.Data = "Could not Connect")
+	else if(args.Data = "Disconnected")
 	{
         Connected = 0;
 	}
