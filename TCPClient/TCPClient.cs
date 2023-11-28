@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Net.Sockets;
 using System.Timers;
+using Timer = System.Timers.Timer;
 
 namespace TCPClient
 {
@@ -49,8 +50,12 @@ namespace TCPClient
         {
             if (!IsConnected())
             {
-                _disconnect();
-                _connect();
+                /*_disconnect();
+                _connect();*/
+                _connectionArgs = new SendArgs()
+                {
+                    Data = "Disconnected"
+                };
             }
         }
         
@@ -103,6 +108,7 @@ namespace TCPClient
                 _tcpClient = new TcpClient();
                 _tcpClient.ConnectAsync(_hostname, _port).Wait(1000);
                 _tcpStream = _tcpClient.GetStream();
+                _tcpClient.Client.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.KeepAlive, true);
                 BeginRead();
 
                 _connectionArgs = new SendArgs()
@@ -206,6 +212,7 @@ namespace TCPClient
         {
             try
             {
+                _tcpClient.Client.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.KeepAlive, false);
                 _tcpClient.Close();
                 _tcpStream.Close();
                 _tcpClient.Dispose();
